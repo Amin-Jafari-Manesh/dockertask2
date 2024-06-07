@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  back:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: back
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/php.ini
+    depends_on:
+      - back_db
+    ports:
+      - "9000:9000"
+    networks:
+      - back_network
+
+  web_server:
+    image: hub.hamdocker.ir/nginx:1.25-alpine
+    container_name: web_server
+    restart: unless-stopped
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "8000:80"
+    networks:
+      - back_network
+
+  back_db:
+    container_name: back_db
+    image: hub.hamdocker.ir/bitnami/mysql:8.3
+    restart: unless-stopped
+    volumes:
+      - dbdata:/var/lib/mysql
+    env_file:
+      - .env
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - back_network
+
+volumes:
+  dbdata:
+    driver: local
+
+networks:
+  back_network:
+    driver: bridge
