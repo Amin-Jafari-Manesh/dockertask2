@@ -12,6 +12,7 @@ This is a Dockerized PHP project using Docker Compose. Follow the instructions b
 To build the Docker image and run the container, navigate to the project directory and run the following command:
 
 ```bash
+cp .env.example .env
 docker-compose up -d --build
 ```
 
@@ -22,7 +23,6 @@ After the Docker container is running, you need to set up the application. Run t
 ```bash
 docker exec -it <container_id> bash
 chown -R www-data:www-data /var/www
-cp .env.example .env
 composer install
 php artisan migrate
 php artisan key:generate
