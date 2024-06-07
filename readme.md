@@ -1,4 +1,4 @@
-# Dockerized PHP Project with Docker Compose
+# Dockerized laravel Project with Docker Compose
 
 This is a Dockerized PHP project using Docker Compose. Follow the instructions below to set up the project.
 
